@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact</title>
+  <link rel="stylesheet" href="/ResuMatch/Contact_page/contact.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body class="bg-gray-50 text-gray-800 transition-colors duration-300 dark:bg-gray-900 dark:text-white">
+  <!-- Navbar
+  <header class="bg-white dark:bg-gray-800 shadow-md py-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <a href="/Home_page/index.html"><img src="/Home_page/logo resumatch.jpg" alt="ResuMatch Logo" class="w-250 h-10" /></a>
+        <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">ResuMatch</h1> -->
+  <!-- </div>
+      <nav class="space-x-6 text-sm font-semibold">
+        <a href="#" class="hover:text-indigo-600">Home</a> -->
+  <!-- <a href="#login" class="hover:text-indigo-600">Login</a>
+        <a href="/Register_page/signup.html" class="hover:text-indigo-600">Signup</a>
+        <button onclick="toggleTheme()"
+          class="ml-4 bg-gray-200 dark:bg-gray-700 p-2 rounded-full transition">🌓</button>
+      </nav>  -->
+  </div>
+  </header>
+
+  <section class="contact-section">
+    <div class="main-container">
+      <h1>Connect with Me HERE!</h1>
+      <br>
+      <div class="contact-info">
+
+        <!-- Email -->
+        <div class="contact-box">
+          <h3><i class="fas fa-envelope" style="margin-right: 8px;"></i> Email</h3>
+          <p><a href="mailto:ridadange2408@gmail.com" class="whitespace-nowrap overflow-hidden text-ellipsis">ridadange2408@gmail.com</a></p>
+          <!-- <p><a href="mailto:ridadange2408@gmail.com">ridadange2408@gmail.com</a></p> -->
+        </div>
+
+        <!-- LinkedIn -->
+        <div class="contact-box">
+          <h3><i class="fab fa-linkedin" style="margin-right: 8px;"></i> LinkedIn</h3>
+          <p><a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank">rida-dange</a></p>
+        </div>
+
+        <!-- GitHub -->
+        <div class="contact-box">
+          <h3><i class="fab fa-github" style="margin-right: 8px;"></i> GitHub</h3>
+          <p><a href="https://github.com/RidaDange" target="_blank">Rida Dange</a></p>
+        </div>
+
+        <!-- Behance -->
+        <div class="contact-box">
+          <h3><i class="fab fa-behance" style="margin-right: 8px;"></i> Behance</h3>
+          <p><a href="https://www.behance.net/ridadange" target="_blank">Rida Dange</a></p>
+        </div>
+
+
+        <!-- Query Form Section -->
+        <div class="form-wrapper">
+          <form class="query-form">
+            <h2>
+              <center><b>Send Your Query</b></center>
+            </h2>
+
+            <label for="name">Name</label>
+            <input type="text" id="name" name="name" placeholder="Enter your name" required>
+
+            <label for="query">Query</label>
+            <textarea id="query" name="query" placeholder="Type your query here..." required></textarea>
+
+            <button type="submit">Submit</button>
+          </form>
+        </div>
+      </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-600 py-8">
+    <div
+      class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 dark:text-gray-300">
+      <p class="mb-4 md:mb-0">&copy; 2025 ResuMatch. All rights reserved.</p>
+      <p>
+        Designed & Developed by
+        <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"
+          class="font-semibold italic text-black hover:underline">
+          Rida Dange
+        </a>
+      </p>
+      <div class="space-x-6">
+        <a href="/ResuMatch/Privacy&Terms/privacy.html" class="hover:text-indigo-600">Privacy</a>
+        <a href="/ResuMatch/Privacy&Terms/terms.html" class="hover:text-indigo-600">Terms</a>
+        <a href="/ResuMatch/Contact_page/contact.html" class="hover:text-indigo-600">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+  </script>
+
+
+</body>
+
+</html>

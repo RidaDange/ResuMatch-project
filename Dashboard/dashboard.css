@@ -1,0 +1,28 @@
+/* dashboard.css */
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: #f9fafb;
+    color: #1f2937;
+  }
+  
+  section {
+    transition: all 0.3s ease-in-out;
+  }
+  
+  section:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  }
+  
+  button {
+    transition: background 0.3s ease-in-out, color 0.3s ease-in-out;
+  }
+  
+  h2, h3, h4 {
+    color: #111827;
+  }
+  
+  a {
+    transition: color 0.2s ease-in-out;
+  }
+  

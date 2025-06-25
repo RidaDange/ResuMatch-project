@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ResuMatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800 transition-colors duration-300 dark:bg-gray-900 dark:text-white">
+  <!-- Navbar -->
+  <header class="bg-white dark:bg-gray-800 shadow-md py-4 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
+      <div class="flex items-center space-x-2">
+        <a href="/ResuMatch/Home_page/index.html"><img src="logo resumatch.jpg" alt="ResuMatch Logo"
+            class="w-250 h-10" /></a>
+        <!-- <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">ResuMatch</h1> -->
+      </div>
+
+      <nav class="flex items-center space-x-6 text-sm font-semibold">
+        <a href="/ResuMatch/registration/login.html" id="loginBtn" class="hover:text-indigo-600">Login</a>
+        <a href="/ResuMatch/registration/signup.html" id="signupBtn" class="hover:text-indigo-600">Signup</a>
+        <span class="block px-4 py-2 font-semibold text-blue-700" id="welcomeText"></span>
+
+        <div id="profileDropdown" class="relative">
+          <!-- Profile Icon triggers dropdown -->
+          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile Icon"
+            class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleProfileMenu()">
+          <!-- Dropdown Menu -->
+          <div id="dropdownMenu" class="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md hidden z-50">
+            <a href="#" onclick="openModal()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Profile
+              Settings</a>
+            <button onclick="logoutUser()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+          </div>
+        </div>
+
+
+    </div>
+    </nav>
+
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <section class="py-20 px-4">
+    <div class="max-w-5xl mx-auto text-center">
+      <h2 class="text-4xl font-bold mb-6">Unlock Your Career Potential!</h2>
+      <p class="text-lg mb-12">Let ResuMatch analyze your Resume and Match you with the perfect Job Roles.</p>
+
+      <!-- Steps -->
+      <h2 class="text-3xl font-bold mb-6">How ResuMatch works!</h2>
+      <br>
+      <div class="grid md:grid-cols-4 gap-8 mb-16">
+        <div class="hover:scale-105 transition transform duration-300">
+          <div class="text-4xl mb-2">1️⃣</div>
+          <h3 class="font-semibold">Upload Your Resume</h3>
+          <p class="text-sm">Drag and drop your PDF/DOC file</p>
+        </div>
+        <div class="hover:scale-105 transition transform duration-300">
+          <div class="text-4xl mb-2">2️⃣</div>
+          <h3 class="font-semibold">Know Your ATS score & Suggestions</h3>
+          <p class="text-sm">Know how much ATS friendly your Resume is</p>
+        </div>
+        <div class="hover:scale-105 transition transform duration-300">
+          <div class="text-4xl mb-2">3️⃣</div>
+          <h3 class="font-semibold">Areas of Improvement</h3>
+          <p class="text-sm">Identify where your Resume needs Improvement</p>
+        </div>
+        <div class="hover:scale-105 transition transform duration-300">
+          <div class="text-4xl mb-2">4️⃣</div>
+          <h3 class="font-semibold">Job Matching</h3>
+          <p class="text-sm">Get Job listings based on your Skillset</p>
+        </div>
+      </div>
+
+      <!-- Upload Box -->
+      <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 max-w-xl mx-auto">
+        <h4 class="text-xl font-semibold mb-4">Upload Your Resume</h4>
+        <input type="file" accept=".pdf,.doc,.docx" class="mb-4 w-full border p-2 rounded" />
+        <button onclick="analyzeResume(), window.location.href='/ResuMatch/Resume Analysis/resume-analysis.html'"
+          class="bg-black text-white py-3 px-6 rounded-lg font-semibold hover:bg-white hover:text-black">Analyze
+          Resume</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-100 dark:bg-gray-600 py-8">
+    <div
+      class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 dark:text-gray-300">
+      <p class="mb-4 md:mb-0">&copy; 2025 ResuMatch. All rights reserved.</p>
+      <p>
+        Designed & Developed by
+        <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"
+          class="font-semibold italic text-black hover:underline">
+          Rida Dange
+        </a>
+      </p>
+      <div class="space-x-6">
+        <a href="/ResuMatch/Privacy&Terms/privacy.html" class="hover:text-indigo-600">Privacy</a>
+        <a href="/ResuMatch/Privacy&Terms/terms.html" class="hover:text-indigo-600">Terms</a>
+        <a href="/ResuMatch/Contact_page/contact.html" class="hover:text-indigo-600">Contact</a>
+      </div>
+    </div>
+  </footer>
+
+
+  <!-- Profile Settings Modal -->
+  <div id="profileModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center">
+    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-8 relative animate-fadeIn">
+      <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">Update Profile</h2>
+
+      <form id="profileForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-semibold mb-1">Full Name</label>
+          <input name="name" type="text"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your name" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Email</label>
+          <input name="email" type="email"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your email" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">New Email</label>
+          <input name="new_email" type="email"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your new email" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">Contact No.</label>
+          <input name="contact" type="tel"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter your contact no" />
+        </div>
+        <div>
+          <label class="block text-sm font-semibold mb-1">New Password</label>
+          <input name="password" type="password"
+            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            placeholder="Enter new password" />
+        </div>
+
+        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">Save
+          Changes</button>
+      </form>
+
+      <!-- Close Button -->
+      <button onclick="closeModal()"
+        class="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
+    </div>
+  </div>
+
+  <script src="home.js"></script>
+</body>
+
+</html>

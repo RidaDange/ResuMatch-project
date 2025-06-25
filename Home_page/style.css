@@ -1,0 +1,95 @@
+body {
+  background: linear-gradient(to bottom right, #e6f2ff, #ffffff); /* soft blue-white */
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #1e1e1e;
+}
+
+h1, h2 {
+  color: #003d99; /* deep blue headings */
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+h1 {
+  font-size: 2.2rem;
+}
+
+h2 {
+  font-size: 1.6rem;
+}
+
+section {
+  padding: 40px 20px;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.card {
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 25px;
+  text-align: center;
+  width: 230px;
+  transition: transform 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.card span {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #3399ff;
+}
+
+.card h3 {
+  color: #003d99;
+  margin-bottom: 8px;
+}
+
+button {
+  background-color: #3399ff;
+  border: none;
+  padding: 12px 25px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 15px;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: #267acc;
+}
+
+input[type="file"] {
+  padding: 10px;
+  border: 1px solid #b3d9ff;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out;
+}
+
