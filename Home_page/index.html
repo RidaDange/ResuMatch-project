@@ -5,168 +5,341 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ResuMatch</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="style.css">
-  <script>
-    tailwind.config = {
-      darkMode: 'class',
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
   <style>
     body {
-      font-family: 'Inter', sans-serif;
+      font-family: 'Poppins', sans-serif;
     }
   </style>
 </head>
 
-<body class="bg-gray-50 text-gray-800 transition-colors duration-300 dark:bg-gray-900 dark:text-white">
+<body class="bg-white text-gray-800">
+
   <!-- Navbar -->
-  <header class="bg-white dark:bg-gray-800 shadow-md py-4 sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <a href="/ResuMatch/Home_page/index.html"><img src="logo resumatch.jpg" alt="ResuMatch Logo"
-            class="w-250 h-10" /></a>
-        <!-- <h1 class="text-xl font-bold text-indigo-600 dark:text-indigo-400">ResuMatch</h1> -->
-      </div>
+  <nav class="bg-white shadow-md px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <img src="/ResuMatch/Home_page/logo.png" alt="ResuMatch Logo" class="h-10 w-auto">
+      <h1 class="text-2xl font-bold text-blue-600"><a href="#">ResuMatch</a></h1>
+    </div>
+    <ul class="flex gap-6 text-sm font-semibold items-center">
+      <li><a href="#upload" class="hover:text-blue-500">Upload</a></li>
+      <li id="historyLink" class="hidden"><a href="/ResuMatch/Home_page/history.html" class="hover:text-blue-500" target="_blank">History</a></li>
+      <li><a href="#contact" class="hover:text-blue-500">Contact</a></li>
+      <li id="signupLink"><a href="#" onclick="openSignup()"
+          class="text-sm font-semibold hover:text-blue-500">Signup</a></li>
+      <li id="loginLink"><a href="#" onclick="openLogin()" class="text-sm font-semibold hover:text-blue-500">Login</a>
+      </li>
+      <li id="userWelcome" class="hidden text-blue-600">Welcome, Rida!</li>
+      <li><a href="/ResuMatch/Privacy&Terms/privacy.html" class="hover:text-blue-500">Privacy</a></li>
+      <li><a href="/ResuMatch/Privacy&Terms/terms.html" class="hover:text-blue-500">Terms</a></li>
+    </ul>
+  </nav>
 
-      <nav class="flex items-center space-x-6 text-sm font-semibold">
-        <a href="/ResuMatch/registration/login.html" id="loginBtn" class="hover:text-indigo-600">Login</a>
-        <a href="/ResuMatch/registration/signup.html" id="signupBtn" class="hover:text-indigo-600">Signup</a>
-        <span class="block px-4 py-2 font-semibold text-blue-700" id="welcomeText"></span>
+  <!-- Signup Popup -->
+  <div id="signupModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white w-full max-w-md p-8 rounded-xl shadow-lg relative">
+      <h2 class="text-2xl font-bold text-blue-600 mb-6 text-center">Create Your Account</h2>
 
-        <div id="profileDropdown" class="relative">
-          <!-- Profile Icon triggers dropdown -->
-          <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile Icon"
-            class="w-8 h-8 rounded-full cursor-pointer" onclick="toggleProfileMenu()">
-          <!-- Dropdown Menu -->
-          <div id="dropdownMenu" class="absolute right-0 mt-2 w-40 bg-white shadow-md rounded-md hidden z-50">
-            <a href="#" onclick="openModal()" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600">Profile
-              Settings</a>
-            <button onclick="logoutUser()" class="w-full text-left px-4 py-2 hover:bg-gray-100">Logout</button>
+      <form class="space-y-4" onsubmit="handleSignup(event)">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Full Name</label>
+          <input type="text" required class="w-full border p-3 rounded-md" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Contact Number</label>
+          <input type="tel" required class="w-full border p-3 rounded-md" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Email</label>
+          <input type="email" required class="w-full border p-3 rounded-md" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Password</label>
+          <div class="relative">
+            <input type="password" id="signupPassword" required class="w-full border p-3 rounded-md pr-10" />
+            <span onclick="togglePassword()"
+              class="absolute top-3 right-3 cursor-pointer text-gray-500 hover:text-blue-600">
+              👁️
+            </span>
           </div>
         </div>
 
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+          Signup
+        </button>
+      </form>
 
+      <button onclick="closeSignup()"
+        class="absolute top-3 right-4 text-gray-500 text-xl hover:text-red-600">&times;</button>
     </div>
-    </nav>
+  </div>
 
+
+  <!-- Login Popup -->
+  <div id="loginModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+    <div class="bg-white w-full max-w-md p-8 rounded-xl shadow-lg relative">
+      <h2 class="text-2xl font-bold text-blue-600 mb-6 text-center">Login to Your Account</h2>
+
+      <form class="space-y-4" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Email</label>
+          <input type="email" required class="w-full border p-3 rounded-md" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-gray-700 mb-1">Password</label>
+          <div class="relative">
+            <input type="password" id="loginPassword" required class="w-full border p-3 rounded-md pr-10" />
+            <span onclick="toggleLoginPassword()"
+              class="absolute top-3 right-3 cursor-pointer text-gray-500 hover:text-blue-600">
+              👁️
+            </span>
+          </div>
+        </div>
+
+        <button type="submit"
+          class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+          Login
+        </button>
+      </form>
+
+      <button onclick="closeLogin()"
+        class="absolute top-3 right-4 text-gray-500 text-xl hover:text-red-600">&times;</button>
     </div>
-  </header>
+  </div>
 
-  <!-- Main Content -->
-  <section class="py-20 px-4">
-    <div class="max-w-5xl mx-auto text-center">
-      <h2 class="text-4xl font-bold mb-6">Unlock Your Career Potential!</h2>
-      <p class="text-lg mb-12">Let ResuMatch analyze your Resume and Match you with the perfect Job Roles.</p>
 
-      <!-- Steps -->
-      <h2 class="text-3xl font-bold mb-6">How ResuMatch works!</h2>
-      <br>
-      <div class="grid md:grid-cols-4 gap-8 mb-16">
-        <div class="hover:scale-105 transition transform duration-300">
-          <div class="text-4xl mb-2">1️⃣</div>
-          <h3 class="font-semibold">Upload Your Resume</h3>
-          <p class="text-sm">Drag and drop your PDF/DOC file</p>
-        </div>
-        <div class="hover:scale-105 transition transform duration-300">
-          <div class="text-4xl mb-2">2️⃣</div>
-          <h3 class="font-semibold">Know Your ATS score & Suggestions</h3>
-          <p class="text-sm">Know how much ATS friendly your Resume is</p>
-        </div>
-        <div class="hover:scale-105 transition transform duration-300">
-          <div class="text-4xl mb-2">3️⃣</div>
-          <h3 class="font-semibold">Areas of Improvement</h3>
-          <p class="text-sm">Identify where your Resume needs Improvement</p>
-        </div>
-        <div class="hover:scale-105 transition transform duration-300">
-          <div class="text-4xl mb-2">4️⃣</div>
-          <h3 class="font-semibold">Job Matching</h3>
-          <p class="text-sm">Get Job listings based on your Skillset</p>
-        </div>
+
+  <!-- Hero Section -->
+  <section class="px-10 py-20 bg-gradient-to-br from-blue-100 to-blue-200">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-10">
+      <div class="md:w-1/2">
+        <h2 class="text-4xl font-bold mb-4 text-gray-800">
+          Know Your ATS Score. Improve and <span class="text-blue-600 italic">Get Hired</span>
+        </h2>
+        <p class="text-gray-600 mb-6">
+          Upload your resume and Job Description and unlock job recommendations tailored just for you.
+        </p>
       </div>
-
-      <!-- Upload Box -->
-      <div class="bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 max-w-xl mx-auto">
-        <h4 class="text-xl font-semibold mb-4">Upload Your Resume</h4>
-        <input type="file" accept=".pdf,.doc,.docx" class="mb-4 w-full border p-2 rounded" />
-        <button onclick="analyzeResume(), window.location.href='/ResuMatch/Resume Analysis/resume-analysis.html'"
-          class="bg-black text-white py-3 px-6 rounded-lg font-semibold hover:bg-white hover:text-black">Analyze
-          Resume</button>
+      <div class="md:w-1/2">
+        <img src="/ResuMatch/Home_page/ai-res-gen-timeline.jpg" alt="AI Resume Illustration"
+          class="w-full max-w-md mx-auto">
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-100 dark:bg-gray-600 py-8">
-    <div
-      class="max-w-6xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center text-sm text-gray-600 dark:text-gray-300">
-      <p class="mb-4 md:mb-0">&copy; 2025 ResuMatch. All rights reserved.</p>
-      <p>
-        Designed & Developed by
-        <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"
-          class="font-semibold italic text-black hover:underline">
-          Rida Dange
-        </a>
-      </p>
-      <div class="space-x-6">
-        <a href="/ResuMatch/Privacy&Terms/privacy.html" class="hover:text-indigo-600">Privacy</a>
-        <a href="/ResuMatch/Privacy&Terms/terms.html" class="hover:text-indigo-600">Terms</a>
-        <a href="/ResuMatch/Contact_page/contact.html" class="hover:text-indigo-600">Contact</a>
+  <!-- Features Section -->
+  <section class="py-16 px-8 bg-white">
+    <h3 class="text-center text-3xl font-semibold mb-12">Why ResuMatch?</h3>
+    <div class="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h4 class="font-semibold text-lg mb-2">ATS Score</h4>
+        <p class="text-sm text-gray-600">Evaluate how well your resume performs in Applicant Tracking Systems.</p>
+      </div>
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h4 class="font-semibold text-lg mb-2">Tone & Clarity</h4>
+        <p class="text-sm text-gray-600">Detect tone and improve professional language instantly.</p>
+      </div>
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-lg transition">
+        <h4 class="font-semibold text-lg mb-2">Job Matches</h4>
+        <p class="text-sm text-gray-600">Find matching jobs from your skills and resume keywords.</p>
       </div>
     </div>
+  </section>
+
+  <!-- How ResuMatch Works -->
+  <section class="py-20 bg-white flex flex-col items-center text-center">
+    <h2 class="text-3xl font-bold text-gray-800 mb-2">How ResuMatch Works?</h2>
+    <p class="text-gray-600 mb-10 max-w-xl">Let <span class="italic font-semibold">ResuMatch</span> analyze your
+      resume and match you with the perfect job roles</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl w-full px-4">
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-md transition">
+        <h3 class="text-blue-600 text-2xl font-bold mb-2">1</h3>
+        <h4 class="font-semibold mb-1">Upload Resume and JD</h4>
+        <p class="text-sm text-gray-600">Upload your resume file or Job Description (if you have any)</p>
+      </div>
+
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-md transition">
+        <h3 class="text-blue-600 text-2xl font-bold mb-2">2</h3>
+        <h4 class="font-semibold mb-1">Get ATS Score</h4>
+        <p class="text-sm text-gray-600">Instantly view your resume's compatibility with ATS systems.</p>
+      </div>
+
+      <div class="bg-blue-50 p-6 rounded-xl shadow hover:shadow-md transition">
+        <h3 class="text-blue-600 text-2xl font-bold mb-2">3</h3>
+        <h4 class="font-semibold mb-1">Get Job Recommendations</h4>
+        <p class="text-sm text-gray-600">Explore jobs based on your resume and skills.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Upload Section -->
+  <section class="py-20 bg-white" id="upload">
+    <div class="max-w-3xl mx-auto bg-white p-10 rounded-xl shadow-lg">
+      <h2 class="text-2xl font-bold text-center text-blue-700 mb-6">Upload Your Resume & Job Description</h2>
+      <form class="flex flex-col gap-6" id="uploadForm">
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">Upload Resume (PDF/DOCX)</label>
+          <input type="file" accept=".pdf,.doc,.docx"
+            class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+        </div>
+        <div>
+          <label class="block mb-2 font-semibold text-gray-700">Paste Job Description (Optional)</label>
+          <textarea rows="5" placeholder="Paste the job description here..."
+            class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
+        </div>
+        <button id="analyzeBtn" type="submit"
+          class="mt-4 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
+          <span id="analyzeText">Analyze</span>
+          <svg id="analyzeLoader" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+            fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 11-8 8z"></path>
+          </svg>
+        </button>
+
+      </form>
+      <!-- Centered & Animated Modal -->
+      <div id="resumeModal" class="fixed inset-0 z-50 hidden bg-black bg-opacity-50 flex items-center justify-center">
+        <div id="modalBox"
+          class="bg-white p-6 rounded-2xl shadow-xl w-96 transform scale-95 opacity-0 transition-all duration-300 ease-out">
+          <h2 class="text-xl font-semibold text-green-600 mb-2">Resume Analyzed!</h2>
+          <p class="text-gray-700">Your resume has been successfully analyzed.</p>
+          <div class="text-right mt-4">
+            <button onclick="closeModal()"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition">
+              OK
+            </button>
+          </div>
+        </div>
+      </div>
+
+
+    </div>
+  </section>
+
+  <!-- Connect Section -->
+  <section id="contact" class="py-12 px-4">
+    <div class="max-w-4xl mx-auto bg-blue-50 rounded-xl shadow-md p-10">
+      <h2 class="text-3xl font-bold text-blue-700 text-center mb-4">Connect with Me</h2>
+      <p class="text-center text-gray-600 mb-6">I'd love to connect! Find me on these platforms:</p>
+
+      <div class="bg-white p-6 rounded-xl shadow-md flex justify-center gap-8 flex-wrap">
+        <!-- LinkedIn -->
+        <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank" title="LinkedIn"
+          class="text-black hover:text-blue-800 text-2xl transition hover:scale-110">
+          <i class="fab fa-linkedin"></i>
+        </a>
+
+        <!-- GitHub -->
+        <a href="https://github.com/RidaDange" target="_blank" title="GitHub"
+          class="text-black hover:text-blue-800 text-2xl transition hover:scale-110">
+          <i class="fab fa-github"></i>
+        </a>
+
+        <!-- Email -->
+        <a href="mailto:ridadange2408@gmail.com" title="Email"
+          class="text-black hover:text-blue-800 text-2xl transition hover:scale-110">
+          <i class="fas fa-envelope"></i>
+        </a>
+
+        <!-- Behance -->
+        <a href="https://www.behance.net/ridadange" target="_blank" title="Behance"
+          class="text-black hover:text-blue-800 text-2xl transition hover:scale-110">
+          <i class="fab fa-behance"></i>
+        </a>
+      </div>
+
+      <!-- Query Form Popup -->
+      <div class="text-center mt-6">
+        <button onclick="openQueryPopup()"
+          class="bg-blue-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-blue-700 transition">
+          Ask a Query
+        </button>
+      </div>
+
+      <div id="queryModal" class="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50 hidden">
+        <div class="bg-white w-full max-w-md p-8 rounded-xl shadow-lg relative">
+          <h2 class="text-2xl font-bold text-blue-600 mb-6 text-center">Ask a Query</h2>
+
+          <form class="space-y-4" onsubmit="handleQuerySubmit(event)">
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Your Email</label>
+              <input type="email" required class="w-full border p-3 rounded-md" />
+            </div>
+
+            <div>
+              <label class="block font-semibold text-gray-700 mb-1">Your Query</label>
+              <textarea rows="5" required class="w-full border p-3 rounded-md resize-none"></textarea>
+            </div>
+
+            <button type="submit"
+              class="w-full bg-blue-600 text-white py-3 rounded-md font-semibold hover:bg-blue-700 transition">
+              Submit
+            </button>
+          </form>
+
+          <button onclick="closeQueryPopup()"
+            class="absolute top-3 right-4 text-gray-500 text-xl hover:text-red-600">&times;</button>
+        </div>
+      </div>
+
+    </div>
+
+
+  </section>
+
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 text-center">
+    <p>&copy; 2025 ResuMatch. Made with 💙 by <a href="https://www.linkedin.com/in/rida-dange-273100256/"
+        target="_blank"><i>Rida Dange</i></a></p>
   </footer>
 
+  <!-- Back to Top Button -->
+  <button id="backToTopBtn"
+    class="fixed bottom-6 right-6 z-50 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition hidden"
+    title="Back to top">
+    <i class="fas fa-arrow-up text-xl"></i>
+  </button>
+  <script src="/ResuMatch/Home_page/index.js"></script>
+  <script src="/ResuMatch/Home_page/home.js"></script>
+  <script>
+    function showModal() {
+      const modal = document.getElementById('resumeModal');
+      const box = document.getElementById('modalBox');
 
-  <!-- Profile Settings Modal -->
-  <div id="profileModal" class="fixed inset-0 z-50 bg-black bg-opacity-50 hidden flex items-center justify-center">
-    <div class="bg-white rounded-xl shadow-xl w-full max-w-md p-8 relative animate-fadeIn">
-      <h2 class="text-2xl font-bold text-blue-700 mb-4 text-center">Update Profile</h2>
+      modal.classList.remove('hidden');
 
-      <form id="profileForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-semibold mb-1">Full Name</label>
-          <input name="name" type="text"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your name" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">Email</label>
-          <input name="email" type="email"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your email" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">New Email</label>
-          <input name="new_email" type="email"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your new email" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">Contact No.</label>
-          <input name="contact" type="tel"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter your contact no" />
-        </div>
-        <div>
-          <label class="block text-sm font-semibold mb-1">New Password</label>
-          <input name="password" type="password"
-            class="w-full border rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter new password" />
-        </div>
+      // Delay the animation slightly to ensure display:block is applied
+      setTimeout(() => {
+        box.classList.add('scale-100', 'opacity-100');
+        box.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
 
-        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded">Save
-          Changes</button>
-      </form>
+    function closeModal() {
+      const modal = document.getElementById('resumeModal');
+      const box = document.getElementById('modalBox');
 
-      <!-- Close Button -->
-      <button onclick="closeModal()"
-        class="absolute top-3 right-4 text-gray-500 hover:text-red-500 text-xl font-bold">&times;</button>
-    </div>
-  </div>
+      // Animate out
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
 
-  <script src="home.js"></script>
+      // Wait for the animation to finish before hiding the modal
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+  </script>
 </body>
 
 </html>

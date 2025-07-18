@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume Analysis - ResuMatch</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+  </style>
+</head>
+
+<body class="bg-gray-50 text-gray-800">
+<!-- Analysis Layout -->
+  <section class="px-10 py-16">
+    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
+
+      <!-- Resume Preview -->
+      <div class="bg-white rounded-xl shadow-md p-6">
+        <h2 class="text-xl font-bold text-blue-700 mb-4">Resume Preview</h2>
+        <div class="w-full h-96 border rounded-lg overflow-hidden">
+          <!-- Placeholder - Embed PDF or use icon -->
+          <iframe src="/uploads/sample_resume.pdf" class="w-full h-full" frameborder="0"></iframe>
+          <!-- If no file to preview, use this:
+          <div class="flex flex-col justify-center items-center h-full text-gray-400">
+            <i class="fas fa-file-alt text-5xl mb-2"></i>
+            <p>No resume uploaded</p>
+          </div> -->
+        </div>
+      </div>
+
+      <!-- Analysis Results -->
+      <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+        <h2 class="text-xl font-bold text-blue-700 mb-4">Resume Analysis Results</h2>
+
+        <!-- ATS Score -->
+        <div>
+          <h3 class="font-semibold text-gray-700">ATS Score</h3>
+          <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
+            <div class="bg-blue-600 h-4 rounded-full" style="width: 78%;"></div>
+          </div>
+          <p class="text-sm mt-1 text-gray-600">Score: <span class="font-bold text-blue-600">78%</span></p>
+        </div>
+
+        <!-- Tone and Language -->
+        <div>
+          <h3 class="font-semibold text-gray-700">Tone & Language</h3>
+          <p class="text-sm text-gray-600 mt-1">Your resume tone is <span class="italic font-medium text-blue-600">Professional & Confident</span>.</p>
+        </div>
+
+        <!-- Strengths -->
+        <div>
+          <h3 class="font-semibold text-gray-700">Strengths / Remarks</h3>
+          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>Clear section-wise structure</li>
+            <li>Relevant experience highlighted</li>
+            <li>Keywords matched with job role</li>
+          </ul>
+        </div>
+
+        <!-- Suggestions -->
+        <div>
+          <h3 class="font-semibold text-gray-700">Suggestions</h3>
+          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>Add quantifiable achievements</li>
+            <li>Use stronger action verbs</li>
+            <li>Consider simplifying long paragraphs</li>
+          </ul>
+        </div>
+
+        <!-- Job Recommendations -->
+        <div>
+          <h3 class="font-semibold text-gray-700">Job Recommendations</h3>
+          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>UI/UX Designer at Infosys</li>
+            <li>Frontend Developer at TCS</li>
+            <li>Junior Product Designer at Zomato</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white py-6 text-center">
+    <p>&copy; 2025 ResuMatch. Made with 💙 by <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"><i>Rida Dange</i></a></p>
+  </footer>
+
+</body>
+
+</html>
