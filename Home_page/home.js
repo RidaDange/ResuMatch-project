@@ -1,6 +1,22 @@
 function toggleTheme() {
   document.documentElement.classList.toggle('dark');
 }
+function showToast(message, type = "success") {
+  const toast = document.createElement("div");
+  const bgColor = type === "success" ? "bg-green-500" : type === "error" ? "bg-red-500" : "bg-yellow-500";
+
+  toast.className = `${bgColor} text-white px-4 py-2 rounded shadow-md animate-slide-in`;
+  toast.textContent = message;
+
+  const container = document.getElementById("toast-container");
+  container.appendChild(toast);
+
+  // Auto-remove after 3 seconds
+  setTimeout(() => {
+    toast.classList.add("animate-slide-out");
+    setTimeout(() => toast.remove(), 500);
+  }, 3000);
+}
 
 function toggleProfileMenu() {
   const menu = document.getElementById("dropdownMenu");
@@ -9,34 +25,39 @@ function toggleProfileMenu() {
 
 const email = localStorage.getItem("userEmail");
 
-window.onload = function () {
+function updateNavbarUI() {
   const isLoggedIn = localStorage.getItem("userLoggedIn");
   const userName = localStorage.getItem("userName");
 
-  const loginBtn = document.getElementById("loginBtn");
-  const signupBtn = document.getElementById("signupBtn");
-  const profileDropdown = document.getElementById("profileDropdown");
-  const welcomeText = document.getElementById("welcomeText");
+  const signupLink = document.getElementById("signupLink");
+  const loginLink = document.getElementById("loginLink");
+  const userWelcome = document.getElementById("userWelcome");
+  const historyLink = document.getElementById("historyLink");
+  const logoutLink = document.getElementById("logoutLink");
 
-  if (loginBtn && signupBtn && profileDropdown) {
-    if (isLoggedIn && userName) {
-      loginBtn.classList.add("hidden");
-      signupBtn.classList.add("hidden");
-      profileDropdown.classList.remove("hidden");
-      if (welcomeText) welcomeText.textContent = `Welcome, ${userName}`;
-    } else {
-      loginBtn.classList.remove("hidden");
-      signupBtn.classList.remove("hidden");
-      profileDropdown.classList.add("hidden");
-    }
+  if (isLoggedIn && userName) {
+    signupLink.classList.add("hidden");
+    loginLink.classList.add("hidden");
+    userWelcome.classList.remove("hidden");
+    logoutLink.classList.remove("hidden");
+    historyLink.classList.remove("hidden");
+    userWelcome.textContent = `Welcome, ${userName}!`;
+  } else {
+    signupLink.classList.remove("hidden");
+    loginLink.classList.remove("hidden");
+    userWelcome.classList.add("hidden");
+    historyLink.classList.add("hidden");
+    logoutLink.classList.add("hidden");
   }
-};
+}
+
+window.onload = updateNavbarUI;
 
 function logoutUser() {
   localStorage.removeItem("userLoggedIn");
   localStorage.removeItem("userEmail");
   localStorage.removeItem("userName");
-  window.location.href = "/ResuMatch/Home_page/index.html";
+  window.location.href = "/ResuMatch_final/Home_page/index.html";
 }
 
 function openModal() {
@@ -100,38 +121,50 @@ async function analyzeResume() {
   const file = document.getElementById("resumeInput").files[0];
   const fileName = file.name;
 
-  // Step 1: Generate presigned URL from backend
-  const presignRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/generate-presigned-url", {
+  // 🔑 Step 0: Get user name (from localStorage or form)
+  const name = localStorage.getItem("userName"); // or replace with actual logic
+  if (!name) {
+    alert("User name not found. Please log in.");
+    return;
+  }
+  console.log("Username:", name);
+
+  // ✅ Step 1: Generate presigned URL from backend
+  const presignRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/generatepresignedURL", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName })
+    body: JSON.stringify({ fileName, name }) // ✅ Include name here
   });
 
-  const { uploadUrl } = await presignRes.json();
+  const { uploadUrl, key } = await presignRes.json(); // ✅ get key
+  console.log("Presigned URL:", uploadUrl);
 
-  // Step 2: Upload resume to S3
+  // ✅ Step 2: Upload resume to S3 using presigned URL
   const uploadRes = await fetch(uploadUrl, {
     method: "PUT",
     body: file
   });
 
-  if (!uploadRes.ok) return alert("❌ Upload failed");
+  if (!uploadRes.ok) {
+    alert("❌ Upload failed");
+    return;
+  }
 
-  // Step 3: Call backend to analyze resume
-  const analyzeRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/resume-upload", {
+  // ✅ Step 3: Call backend to analyze resume
+  const analyzeRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/resume_analysis", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       bucket: "resumatch-resumes",
-      file: fileName
+      fileName: key  // ✅ Full path with name folder
     })
   });
 
   const data = await analyzeRes.json();
 
-  // Step 4: Save response to localStorage
+  // ✅ Step 4: Save response to localStorage
   localStorage.setItem("resumeReport", JSON.stringify(data));
 
-  // Step 5: Redirect to report page
-  window.location.href = "/ResuMatch/Resume_Analysis/resume-analysis.html";  // Update with actual report page path
+  // ✅ Step 5: Redirect to report page
+  window.location.href = "/ResuMatch_final/resume-analysis/ra.html";
 }

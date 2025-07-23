@@ -13,35 +13,58 @@ backToTopBtn.addEventListener("click", function () {
     window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
-// Signup Popup Functions
-function openSignup() {
-    document.getElementById('signupModal').classList.remove('hidden');
-}
-
-function closeSignup() {
-    document.getElementById('signupModal').classList.add('hidden');
-}
 
 function togglePassword() {
     const passwordInput = document.getElementById('signupPassword');
     passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
 }
 
-function handleSignup(event) {
-    event.preventDefault();
-    closeSignup();
-    document.getElementById('signupLink').classList.add('hidden');
-    document.getElementById('userWelcome').classList.remove('hidden');
-    document.getElementById('historyLink').classList.remove('hidden');
+function openSignup() {
+    document.getElementById("signupModal").classList.remove("hidden");
 }
 
+function closeSignup() {
+    document.getElementById("signupModal").classList.add("hidden");
+}
 
 function openLogin() {
-    document.getElementById('loginModal').classList.remove('hidden');
+    document.getElementById("loginModal").classList.remove("hidden");
 }
 
 function closeLogin() {
-    document.getElementById('loginModal').classList.add('hidden');
+    document.getElementById("loginModal").classList.add("hidden");
+}
+
+
+async function handleSignup(event) {
+    event.preventDefault();
+    const inputs = event.target.querySelectorAll("input");
+    const name = inputs[0].value;
+    const contact = inputs[1].value;
+    const email = inputs[2].value;
+    const password = inputs[3].value;
+
+    try {
+        const res = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ name, contact, email, password })
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Signup failed");
+
+        localStorage.setItem("userLoggedIn", true);
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userName", name);
+
+        closeSignup();
+        updateNavbarUI();
+
+        alert("✅ Signup successful!");
+    } catch (err) {
+        alert("❌ Signup failed: " + err.message);
+    }
 }
 
 function toggleLoginPassword() {
@@ -49,16 +72,29 @@ function toggleLoginPassword() {
     loginPass.type = loginPass.type === 'password' ? 'text' : 'password';
 }
 
-function handleLogin(event) {
+async function handleLogin(event) {
     event.preventDefault();
-    closeLogin();
+    const inputs = event.target.querySelectorAll("input");
+    const email = inputs[0].value;
+    const password = inputs[1].value;
 
-    // Simulate login success and update UI
-    document.getElementById('signupLink').classList.add('hidden');
-    document.getElementById('loginLink').classList.add('hidden');
-    document.getElementById('userWelcome').classList.remove('hidden');
-    document.getElementById('historyLink').classList.remove('hidden');
+    try {
+        const res = await fetch(`https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI?email=${email}`);
+        const user = await res.json();
 
+        if (!user || user.password !== password) throw new Error("Invalid credentials");
+
+        localStorage.setItem("userLoggedIn", true);
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("userName", user.name);
+
+        closeLogin();
+        updateNavbarUI();
+
+        alert("✅ Login successful!");
+    } catch (err) {
+        alert("❌ Login failed: " + err.message);
+    }
 }
 
 function openQueryPopup() {
@@ -78,7 +114,7 @@ function handleQuerySubmit(event) {
 document.getElementById('uploadForm').addEventListener('submit', function (event) {
     event.preventDefault();
 
-    const analyzeBtn = document.getElementById('analyzeBtn');
+    const analyzeBtn = document.getElementById('analyzeResume');
     const analyzeText = document.getElementById('analyzeText');
     const analyzeLoader = document.getElementById('analyzeLoader');
 
@@ -87,16 +123,14 @@ document.getElementById('uploadForm').addEventListener('submit', function (event
     analyzeText.classList.add('hidden');
     analyzeLoader.classList.remove('hidden');
 
-    // Simulate processing (replace this with your actual processing logic)
-    setTimeout(() => {
-        // Hide loader and re-enable button
+    // ✅ Call the actual resume analysis logic
+    analyzeResume().catch(error => {
+        console.error("Error analyzing resume:", error);
+        alert("Something went wrong during resume analysis.");
+    }).finally(() => {
+        // Restore UI no matter what
         analyzeBtn.disabled = false;
         analyzeText.classList.remove('hidden');
         analyzeLoader.classList.add('hidden');
-
-        showModal();
-    }, 3000); // 3 seconds delay to simulate
+    });
 });
-
-
-  

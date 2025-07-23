@@ -53,10 +53,17 @@ async function analyzeResume() {
 
     // Step 3: Analyze Resume using selected API
     const endpoint = endpointMap[selectedAPI];
+    const jdTextarea = document.getElementById("jdInput"); // assuming <textarea id="jdInput"></textarea> exists
+    const jdText = jdTextarea ? jdTextarea.value.trim() : "";
+
     const analyzeRes = await fetch(endpoint, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ bucket, fileName })
+      body: JSON.stringify({
+        bucket,
+        fileName,
+        jd_text: jdText // send only if present (it's okay if blank, Lambda handles it)
+      })
     });
 
     const data = await analyzeRes.json();
@@ -69,8 +76,9 @@ async function analyzeResume() {
     sessionStorage.setItem("analysisResult", JSON.stringify(data));
 
     setTimeout(() => {
-      window.location.href = "/ResuMatch/Resume Analysis/resume-analysis.html";
+      window.location.href = `/ResuMatch_final/resume-analysis/ra.html?file=${encodeURIComponent(fileName)}`;
     }, 300);
+
   } catch (err) {
     console.error("❌ Error:", err);
     alert("❌ Upload or analysis failed. Check console.");
@@ -87,21 +95,25 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resumeView = document.getElementById("resumeView");
 
   const path = decodeURIComponent(window.location.pathname).toLowerCase();
-  if (!path.endsWith("/resume-analysis.html")) return;
+  if (!path.endsWith("/ra.html")) return;
 
   const queryParams = new URLSearchParams(window.location.search);
   const fileFromHistory = queryParams.get("file");
-  // console.log("🎯 File from query param:", fileFromHistory);
+  console.log("🎯 File from query param:", fileFromHistory);
 
   // Case 1: Coming from history page with ?file=
   if (fileFromHistory) {
     const reportKey = `resumes-reports/${fileFromHistory}.json`;
     const reportURL = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${encodeURIComponent(reportKey)}`;
-    // console.log("📦 Fetching report from:", reportURL);
+    console.log("📦 Fetching report from:", reportURL);
 
     try {
       const response = await fetch(reportURL);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch report: ${response.status}`);
+      }
       const data = await response.json();
+      console.log("✅ Report Data:", data);
       renderReport(data);
     } catch (err) {
       console.error("❌ Failed to load saved report:", err);
@@ -109,8 +121,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (resumeView) {
-      resumeView.src = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${encodeURIComponent(fileFromHistory)}`;
-      // console.log("📄 PDF loaded from:", resumeView.src);
+      resumeView.src = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${fileFromHistory}`;
+      console.log("📄 PDF loaded from:", resumeView.src);
     }
     return;
   }
@@ -127,22 +139,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderReport(data);
   } else {
     alert("❌ No analysis data found. Please upload a resume first.");
-    window.location.href = "/ResuMatch/Home_page/index.html";
+    window.location.href = "/ResuMatch_final/Home_page/index.html";
   }
 });
 
 // 🧠 Render logic in both cases
 function renderReport(data) {
-  document.getElementById("atsScore").innerText = data.ats_score || "N/A";
-  document.getElementById("atsRemark").innerText = data.sentiment || "N/A";
+  const atsScore = data.ats_score || "N/A"; // Example: "35%"
+  const atsValue = parseInt(atsScore);      // Example: 35
+
+  // ATS Score
+  document.getElementById("atsScore").textContent = atsScore;
+  const atsBar = document.getElementById("atsScoreBar");
+  if (atsBar && !isNaN(atsValue)) {
+    atsBar.style.width = atsScore; // e.g., "35%"
+  }
+
+  // Tone and Sentiment
   document.getElementById("toneLanguage").innerText = data.sentiment || "N/A";
 
+  // Strengths
   document.getElementById("strengthsList").innerHTML =
     (data.strengths || []).map(item => `<li>${item}</li>`).join("");
 
+  // Suggestions
   document.getElementById("suggestionsList").innerHTML =
     (data.suggestions || []).map(item => `<li>${item}</li>`).join("");
 
+  // Job Recommendations
   document.getElementById("jobsList").innerHTML =
     (data.jobs || []).map(item => `<li>${item}</li>`).join("");
 }

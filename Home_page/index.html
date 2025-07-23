@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ResuMatch</title>
+  <link rel="stylesheet" href="/ResuMatch_final/Home_page/scroller.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -13,28 +14,66 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+
+    @keyframes slide-in {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-out {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+    .animate-slide-in {
+      animation: slide-in 0.3s ease-out forwards;
+    }
+
+    .animate-slide-out {
+      animation: slide-out 0.3s ease-in forwards;
+    }
   </style>
 </head>
 
 <body class="bg-white text-gray-800">
+  <!-- Toast container -->
+  <div id="toast-container" class="fixed bottom-4 right-4 z-50 space-y-2"></div>
 
   <!-- Navbar -->
   <nav class="bg-white shadow-md px-8 py-4 flex justify-between items-center">
     <div class="flex items-center gap-3">
-      <img src="/ResuMatch/Home_page/logo.png" alt="ResuMatch Logo" class="h-10 w-auto">
+      <img src="/ResuMatch_final/Home_page/logo.png" alt="ResuMatch Logo" class="h-10 w-auto">
       <h1 class="text-2xl font-bold text-blue-600"><a href="#">ResuMatch</a></h1>
     </div>
     <ul class="flex gap-6 text-sm font-semibold items-center">
       <li><a href="#upload" class="hover:text-blue-500">Upload</a></li>
-      <li id="historyLink" class="hidden"><a href="/ResuMatch/Home_page/history.html" class="hover:text-blue-500" target="_blank">History</a></li>
+      <li id="historyLink" class="hidden"><a href="/ResuMatch_final/Home_page/history.html"
+          class="hover:text-blue-500">History</a></li>
       <li><a href="#contact" class="hover:text-blue-500">Contact</a></li>
       <li id="signupLink"><a href="#" onclick="openSignup()"
           class="text-sm font-semibold hover:text-blue-500">Signup</a></li>
       <li id="loginLink"><a href="#" onclick="openLogin()" class="text-sm font-semibold hover:text-blue-500">Login</a>
       </li>
       <li id="userWelcome" class="hidden text-blue-600">Welcome, Rida!</li>
-      <li><a href="/ResuMatch/Privacy&Terms/privacy.html" class="hover:text-blue-500">Privacy</a></li>
-      <li><a href="/ResuMatch/Privacy&Terms/terms.html" class="hover:text-blue-500">Terms</a></li>
+      <li id="logoutLink" class="hidden"><button onclick="logoutUser()"
+          class="text-red-400 hover:text-red-700 transition">Log Out</button></li>
+      <li><a href="/ResuMatch_final/Privacy&Terms/privacy.html" class="hover:text-blue-500">Privacy</a></li>
+      <li><a href="/ResuMatch_final/Privacy&Terms/terms.html" class="hover:text-blue-500">Terms</a></li>
+
     </ul>
   </nav>
 
@@ -129,7 +168,7 @@
         </p>
       </div>
       <div class="md:w-1/2">
-        <img src="/ResuMatch/Home_page/ai-res-gen-timeline.jpg" alt="AI Resume Illustration"
+        <img src="/ResuMatch_final/Home_page/ai-res-gen-timeline.jpg" alt="AI Resume Illustration"
           class="w-full max-w-md mx-auto">
       </div>
     </div>
@@ -188,15 +227,17 @@
       <form class="flex flex-col gap-6" id="uploadForm">
         <div>
           <label class="block mb-2 font-semibold text-gray-700">Upload Resume (PDF/DOCX)</label>
-          <input type="file" accept=".pdf,.doc,.docx"
+          <input id="resumeInput" type="file" accept=".pdf,.doc,.docx"
             class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" />
+
+
         </div>
         <div>
-          <label class="block mb-2 font-semibold text-gray-700">Paste Job Description (Optional)</label>
-          <textarea rows="5" placeholder="Paste the job description here..."
+          <label for="jdInput" class="block mb-2 font-semibold text-gray-700">Paste Job Description (Optional)</label>
+          <textarea rows="6" placeholder="Paste the job description here..." id="jdInput"
             class="w-full border border-gray-300 p-3 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"></textarea>
         </div>
-        <button id="analyzeBtn" type="submit"
+        <button id="analyzeResume" type="submit"
           class="mt-4 bg-blue-600 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-700 transition flex items-center justify-center gap-2 disabled:opacity-60 disabled:cursor-not-allowed">
           <span id="analyzeText">Analyze</span>
           <svg id="analyzeLoader" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
@@ -300,8 +341,8 @@
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white py-6 text-center">
-    <p>&copy; 2025 ResuMatch. Made with 💙 by <a href="https://www.linkedin.com/in/rida-dange-273100256/"
-        target="_blank"><i>Rida Dange</i></a></p>
+    <p>&copy; 2025 ResuMatch. Designed and Developed by <a href="https://www.linkedin.com/in/rida-dange-273100256/"
+        target="_blank" class="text-red-300"><i><b>Rida Dange</b></i></a></p>
   </footer>
 
   <!-- Back to Top Button -->
@@ -310,8 +351,6 @@
     title="Back to top">
     <i class="fas fa-arrow-up text-xl"></i>
   </button>
-  <script src="/ResuMatch/Home_page/index.js"></script>
-  <script src="/ResuMatch/Home_page/home.js"></script>
   <script>
     function showModal() {
       const modal = document.getElementById('resumeModal');
@@ -339,7 +378,50 @@
         modal.classList.add('hidden');
       }, 300);
     }
+    document.addEventListener("DOMContentLoaded", () => {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+      if (isLoggedIn === "true") {
+        // Hide login/signup
+        const signupLink = document.getElementById("signupLink");
+        const loginLink = document.getElementById("loginLink");
+        const logoutLink = document.getElementById("logout-link");
+        const userWelcome = document.getElementById("userWelcome");
+
+        if (signupLink) signupLink.classList.add("hidden");
+        if (loginLink) loginLink.classList.add("hidden");
+
+        // Show logout and welcome
+        if (logoutLink) logoutLink.classList.remove("hidden");
+        if (userWelcome) userWelcome.classList.remove("hidden");
+      }
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const fileInput = document.getElementById("resumeInput");
+
+      if (analyzeBtn && fileInput) {
+        analyzeBtn.addEventListener("click", analyzeResume);
+      }
+
+      // Hide/Show navbar items
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn === "true") {
+        const signupLink = document.getElementById("signupLink");
+        const loginLink = document.getElementById("loginLink");
+        const logoutLink = document.getElementById("logout-link");
+        const userWelcome = document.getElementById("userWelcome");
+
+        if (signupLink) signupLink.classList.add("hidden");
+        if (loginLink) loginLink.classList.add("hidden");
+        if (logoutLink) logoutLink.classList.remove("hidden");
+        if (userWelcome) userWelcome.classList.remove("hidden");
+      }
+    });
   </script>
+  <script src="/ResuMatch_final/Home_page/index.js"></script>
+  <script src="/ResuMatch_final/Home_page/home.js"></script>
+  <script src="/ResuMatch_final/resume-analysis/ra.js"></script>
 </body>
 
 </html>

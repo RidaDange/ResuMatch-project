@@ -5,6 +5,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Resume Analysis - ResuMatch</title>
+  <link rel="stylesheet" href="/ResuMatch_final/Home_page/scroller.css">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
@@ -12,74 +13,129 @@
     body {
       font-family: 'Poppins', sans-serif;
     }
+
+    /* Smooth animation for the progress bar */
+    #atsScoreBar {
+      transition: width 1s ease-in-out;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    @keyframes slide-in {
+      from {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes slide-out {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateX(100%);
+      }
+    }
+
+    .animate-slide-in {
+      animation: slide-in 0.3s ease-out forwards;
+    }
+
+    .animate-slide-out {
+      animation: slide-out 0.3s ease-in forwards;
+    }
   </style>
 </head>
 
 <body class="bg-gray-50 text-gray-800">
-<!-- Analysis Layout -->
-  <section class="px-10 py-16">
-    <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-10 items-start">
 
+  <!-- Analysis Layout -->
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md px-8 py-4 flex justify-between items-center">
+    <div class="flex items-center gap-3">
+      <img src="/ResuMatch_final/Home_page/logo.png" alt="ResuMatch Logo" class="h-10 w-auto">
+      <h1 class="text-2xl font-bold text-blue-600"><a href="/ResuMatch_final/Home_page/index.html">ResuMatch</a></h1>
+    </div>
+    <ul class="flex gap-6 text-sm font-semibold items-center">
+      <!-- <li><a href="#upload" class="hover:text-blue-500">Upload</a></li> -->
+      <li id="historyLink" class="hidden"><a href="/ResuMatch_final/Home_page/history.html"
+          class="hover:text-blue-500">History</a></li>
+      <!-- <li><a href="#contact" class="hover:text-blue-500">Contact</a></li> -->
+      <li id="signupLink"><a href="#" onclick="openSignup()"
+          class="text-sm font-semibold hover:text-blue-500">Signup</a></li>
+      <li id="loginLink"><a href="#" onclick="openLogin()" class="text-sm font-semibold hover:text-blue-500">Login</a>
+      </li>
+      <li id="userWelcome" class="hidden text-blue-600"></li>
+      <li id="logoutLink" class="hidden"><button onclick="logoutUser()"
+          class="text-red-400 hover:text-red-700 transition">Log Out</button></li>
+      <!-- <li><a href="/ResuMatch_final/Privacy&Terms/privacy.html" class="hover:text-blue-500">Privacy</a></li> -->
+      <!-- <li><a href="/ResuMatch_final/Privacy&Terms/terms.html" class="hover:text-blue-500">Terms</a></li> -->
+
+    </ul>
+  </nav>
+
+  <section class="px-8 py-16">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row gap-10 items-stretch">
       <!-- Resume Preview -->
-      <div class="bg-white rounded-xl shadow-md p-6">
+      <div class="bg-white rounded-2xl shadow-md p-8 space-y-6 flex-1 flex flex-col">
         <h2 class="text-xl font-bold text-blue-700 mb-4">Resume Preview</h2>
-        <div class="w-full h-96 border rounded-lg overflow-hidden">
-          <!-- Placeholder - Embed PDF or use icon -->
-          <iframe src="/uploads/sample_resume.pdf" class="w-full h-full" frameborder="0"></iframe>
-          <!-- If no file to preview, use this:
-          <div class="flex flex-col justify-center items-center h-full text-gray-400">
-            <i class="fas fa-file-alt text-5xl mb-2"></i>
-            <p>No resume uploaded</p>
-          </div> -->
+        <div class="flex-1 border rounded-lg overflow-hidden">
+          <iframe id="resumeView" class="w-full h-full" frameborder="0"></iframe>
         </div>
       </div>
 
       <!-- Analysis Results -->
-      <div class="bg-white rounded-xl shadow-md p-6 space-y-6">
+      <div class="bg-white rounded-2xl shadow-md p-8 space-y-6 flex-1">
         <h2 class="text-xl font-bold text-blue-700 mb-4">Resume Analysis Results</h2>
 
         <!-- ATS Score -->
         <div>
           <h3 class="font-semibold text-gray-700">ATS Score</h3>
           <div class="w-full bg-gray-200 rounded-full h-4 mt-2">
-            <div class="bg-blue-600 h-4 rounded-full" style="width: 78%;"></div>
+            <div class="bg-blue-600 h-4 rounded-full" id="atsScoreBar" style="width: 0%;"></div>
           </div>
-          <p class="text-sm mt-1 text-gray-600">Score: <span class="font-bold text-blue-600">78%</span></p>
+          <p class="text-sm mt-1 text-gray-600">Score: <span id="atsScore"
+              class="font-bold text-blue-600">Loading...</span></p>
         </div>
 
         <!-- Tone and Language -->
         <div>
           <h3 class="font-semibold text-gray-700">Tone & Language</h3>
-          <p class="text-sm text-gray-600 mt-1">Your resume tone is <span class="italic font-medium text-blue-600">Professional & Confident</span>.</p>
+          <p class="text-sm text-gray-600 mt-1">Your resume tone is <span id="toneLanguage"
+              class="italic font-medium text-blue-600">Loading...</span>.</p>
         </div>
 
         <!-- Strengths -->
         <div>
           <h3 class="font-semibold text-gray-700">Strengths / Remarks</h3>
-          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
-            <li>Clear section-wise structure</li>
-            <li>Relevant experience highlighted</li>
-            <li>Keywords matched with job role</li>
+          <ul id="strengthsList" class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>Loading...</li>
           </ul>
         </div>
 
         <!-- Suggestions -->
         <div>
           <h3 class="font-semibold text-gray-700">Suggestions</h3>
-          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
-            <li>Add quantifiable achievements</li>
-            <li>Use stronger action verbs</li>
-            <li>Consider simplifying long paragraphs</li>
+          <ul id="suggestionsList" class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>Loading...</li>
           </ul>
         </div>
 
         <!-- Job Recommendations -->
         <div>
           <h3 class="font-semibold text-gray-700">Job Recommendations</h3>
-          <ul class="list-disc ml-5 text-sm text-gray-600 space-y-1">
-            <li>UI/UX Designer at Infosys</li>
-            <li>Frontend Developer at TCS</li>
-            <li>Junior Product Designer at Zomato</li>
+          <ul id="jobsList" class="list-disc ml-5 text-sm text-gray-600 space-y-1">
+            <li>Loading...</li>
           </ul>
         </div>
 
@@ -89,9 +145,83 @@
 
   <!-- Footer -->
   <footer class="bg-gray-800 text-white py-6 text-center">
-    <p>&copy; 2025 ResuMatch. Made with 💙 by <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"><i>Rida Dange</i></a></p>
+    <p>&copy; 2025 ResuMatch. Made with 💙 by
+      <a href="https://www.linkedin.com/in/rida-dange-273100256/" target="_blank"><i>Rida Dange</i></a>
+    </p>
   </footer>
 
+  <!-- JS -->
+  <script>
+    function showModal() {
+      const modal = document.getElementById('resumeModal');
+      const box = document.getElementById('modalBox');
+
+      modal.classList.remove('hidden');
+
+      // Delay the animation slightly to ensure display:block is applied
+      setTimeout(() => {
+        box.classList.add('scale-100', 'opacity-100');
+        box.classList.remove('scale-95', 'opacity-0');
+      }, 10);
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('resumeModal');
+      const box = document.getElementById('modalBox');
+
+      // Animate out
+      box.classList.remove('scale-100', 'opacity-100');
+      box.classList.add('scale-95', 'opacity-0');
+
+      // Wait for the animation to finish before hiding the modal
+      setTimeout(() => {
+        modal.classList.add('hidden');
+      }, 300);
+    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+
+      if (isLoggedIn === "true") {
+        // Hide login/signup
+        const signupLink = document.getElementById("signupLink");
+        const loginLink = document.getElementById("loginLink");
+        const logoutLink = document.getElementById("logout-link");
+        const userWelcome = document.getElementById("userWelcome");
+
+        if (signupLink) signupLink.classList.add("hidden");
+        if (loginLink) loginLink.classList.add("hidden");
+
+        // Show logout and welcome
+        if (logoutLink) logoutLink.classList.remove("hidden");
+        if (userWelcome) userWelcome.classList.remove("hidden");
+      }
+    });
+    document.addEventListener("DOMContentLoaded", () => {
+      const analyzeBtn = document.getElementById("analyzeBtn");
+      const fileInput = document.getElementById("resumeInput");
+
+      if (analyzeBtn && fileInput) {
+        analyzeBtn.addEventListener("click", analyzeResume);
+      }
+
+      // Hide/Show navbar items
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn === "true") {
+        const signupLink = document.getElementById("signupLink");
+        const loginLink = document.getElementById("loginLink");
+        const logoutLink = document.getElementById("logout-link");
+        const userWelcome = document.getElementById("userWelcome");
+
+        if (signupLink) signupLink.classList.add("hidden");
+        if (loginLink) loginLink.classList.add("hidden");
+        if (logoutLink) logoutLink.classList.remove("hidden");
+        if (userWelcome) userWelcome.classList.remove("hidden");
+      }
+    });
+  </script>
+  <script src="/ResuMatch_final/Home_page/index.js"></script>
+  <script src="/ResuMatch_final/Home_page/home.js"></script>
+  <script src="/ResuMatch_final/resume-analysis/ra.js"></script>
 </body>
 
 </html>
