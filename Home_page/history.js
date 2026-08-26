@@ -97,7 +97,7 @@ function renderResumes(data) {
 }
 
 function viewResume(fileName) {
-    window.location.href = `/ResuMatch_final/resume-analysis/ra.html?file=${encodeURIComponent(fileName)}`;
+    window.location.href = `resume-analysis/ra.html?file=${encodeURIComponent(fileName)}`;
 }
 
 function downloadResume(fileUrl) {

@@ -2,7 +2,7 @@
 
 function logoutUser() {
     localStorage.removeItem("loggedIn");
-    window.location.href = "/Home_page/index.html";
+    window.location.href = "index.html";
   }
   
   // Optional: Dark mode toggle logic

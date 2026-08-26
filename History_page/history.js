@@ -35,7 +35,7 @@ function logoutUser() {
     localStorage.removeItem("userLoggedIn");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("userName");
-    window.location.href = "/ResuMatch/Home_page/index.html";
+    window.location.href = "index.html";
 }
 
 function openModal() {
@@ -44,7 +44,7 @@ function openModal() {
 
     if (!email) return;
 
-    fetch(`https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI?email=${email}`)
+    fetch(`https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users?email=${email}`)
         .then(res => res.json())
         .then(user => {
             document.querySelector('input[name="name"]').value = user.name || '';
@@ -76,7 +76,7 @@ document.getElementById('profileForm')?.addEventListener('submit', function (e) 
         return;
     }
 
-    fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI", {
+    fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ name, contact, password, email, new_email })

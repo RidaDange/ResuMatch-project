@@ -45,7 +45,7 @@ async function handleSignup(event) {
     const password = inputs[3].value;
 
     try {
-        const res = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI", {
+        const res = await fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ name, contact, email, password })
@@ -74,17 +74,45 @@ function toggleLoginPassword() {
 
 async function handleLogin(event) {
     event.preventDefault();
+
     const inputs = event.target.querySelectorAll("input");
-    const email = inputs[0].value;
+
+    const email = inputs[0].value.trim().toLowerCase();
     const password = inputs[1].value;
 
     try {
-        const res = await fetch(`https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI?email=${email}`);
+        console.log("📧 Login email:", email);
+        console.log("🔑 Password entered:", password);
+
+        const url =
+            `https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users?email=${encodeURIComponent(email)}`;
+
+        console.log("🌐 Calling:", url);
+
+        const res = await fetch(url);
+
+        console.log("HTTP status:", res.status);
+
         const user = await res.json();
 
-        if (!user || user.password !== password) throw new Error("Invalid credentials");
+        console.log("📦 Response from Lambda:", user);
 
-        localStorage.setItem("userLoggedIn", true);
+        if (!res.ok) {
+            throw new Error(user.error || `API error: ${res.status}`);
+        }
+
+        console.log("Password returned by API:", user.password);
+        console.log("Entered password:", password);
+        console.log(
+            "Password match:",
+            user.password === password
+        );
+
+        if (!user || user.password !== password) {
+            throw new Error("Invalid credentials");
+        }
+
+        localStorage.setItem("userLoggedIn", "true");
         localStorage.setItem("userEmail", email);
         localStorage.setItem("userName", user.name);
 
@@ -92,7 +120,9 @@ async function handleLogin(event) {
         updateNavbarUI();
 
         alert("✅ Login successful!");
+
     } catch (err) {
+        console.error("❌ LOGIN ERROR:", err);
         alert("❌ Login failed: " + err.message);
     }
 }

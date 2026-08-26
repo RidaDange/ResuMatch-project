@@ -25,7 +25,7 @@ async function analyzeResume() {
   }
 
   const fileName = file.name;
-  const bucket = "resumatch-resumes";
+  const bucket = "resumatch-resumes-new";
 
   try {
     // Step 1: Get presigned URL
@@ -76,7 +76,7 @@ async function analyzeResume() {
     sessionStorage.setItem("analysisResult", JSON.stringify(data));
 
     setTimeout(() => {
-      window.location.href = `/ResuMatch_final/resume-analysis/ra.html?file=${encodeURIComponent(fileName)}`;
+      window.location.href = `resume-analysis/ra.html?file=${encodeURIComponent(fileName)}`;
     }, 300);
 
   } catch (err) {
@@ -104,7 +104,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Case 1: Coming from history page with ?file=
   if (fileFromHistory) {
     const reportKey = `resumes-reports/${fileFromHistory}.json`;
-    const reportURL = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${encodeURIComponent(reportKey)}`;
+    const reportURL = `https://resumatch-resumes-new.s3.ap-south-1.amazonaws.com/${encodeURIComponent(reportKey)}`;
     console.log("📦 Fetching report from:", reportURL);
 
     try {
@@ -121,7 +121,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     if (resumeView) {
-      resumeView.src = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${fileFromHistory}`;
+      resumeView.src = `https://resumatch-resumes-new.s3.ap-south-1.amazonaws.com/${fileFromHistory}`;
       console.log("📄 PDF loaded from:", resumeView.src);
     }
     return;
@@ -139,7 +139,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderReport(data);
   } else {
     alert("❌ No analysis data found. Please upload a resume first.");
-    window.location.href = "/ResuMatch_final/Home_page/index.html";
+    window.location.href = "Home_page/index.html";
   }
 });
 

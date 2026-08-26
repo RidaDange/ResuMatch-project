@@ -7,8 +7,8 @@ import {
 
 // ✅ Your Cognito pool data
 const poolData = {
-    UserPoolId: "ap-south-1_MsnsL6Wxh",
-    ClientId: "1htcd9u5v0pt1ggfgp6qkdkf22",
+    UserPoolId: "ap-south-1_a4CWKGPvR",
+    ClientId: "4it3r2nsl16upibofjo9rf10ba",
 };
 
 const userPool = new CognitoUserPool(poolData);
@@ -28,18 +28,55 @@ export function signUp(username, password, phone) {
     });
 }
 
-// ✅ Login Function
 export function login(username, password) {
-    const user = new CognitoUser({ Username: username, Pool: userPool });
-    const authDetails = new AuthenticationDetails({ Username: username, Password: password });
+    const email = username.trim().toLowerCase();
+
+    const user = new CognitoUser({
+        Username: email,
+        Pool: userPool
+    });
+
+    const authDetails = new AuthenticationDetails({
+        Username: email,
+        Password: password
+    });
 
     return new Promise((resolve, reject) => {
+
         user.authenticateUser(authDetails, {
+
             onSuccess: (session) => {
-                const token = session.getIdToken().getJwtToken();
-                resolve({ user, token });
+
+                console.log("✅ COGNITO LOGIN SUCCESS");
+
+                resolve({
+                    user,
+                    idToken: session.getIdToken().getJwtToken(),
+                    accessToken: session.getAccessToken().getJwtToken(),
+                    refreshToken: session.getRefreshToken().getToken()
+                });
             },
-            onFailure: reject,
+
+            onFailure: (err) => {
+
+                console.error(
+                    "❌ Cognito login failed"
+                );
+
+                console.error("Code:", err?.code);
+                console.error("Message:", err?.message);
+
+                reject(err);
+            },
+
+            newPasswordRequired: () => {
+
+                reject({
+                    code: "NewPasswordRequired",
+                    message: "New password is required."
+                });
+
+            }
         });
     });
 }

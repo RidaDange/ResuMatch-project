@@ -57,7 +57,7 @@ function logoutUser() {
   localStorage.removeItem("userLoggedIn");
   localStorage.removeItem("userEmail");
   localStorage.removeItem("userName");
-  window.location.href = "/ResuMatch_final/Home_page/index.html";
+  window.location.href = "index.html";
 }
 
 function openModal() {
@@ -66,7 +66,7 @@ function openModal() {
 
   if (!email) return;
 
-  fetch(`https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI?email=${email}`)
+  fetch(`https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users?email=${email}`)
     .then(res => res.json())
     .then(user => {
       document.querySelector('input[name="name"]').value = user.name || '';
@@ -98,7 +98,7 @@ document.getElementById('profileForm')?.addEventListener('submit', function (e) 
     return;
   }
 
-  fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/userapi/userAPI", {
+  fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/userAPI/users", {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ name, contact, password, email, new_email })
@@ -130,7 +130,7 @@ async function analyzeResume() {
   console.log("Username:", name);
 
   // ✅ Step 1: Generate presigned URL from backend
-  const presignRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/generatepresignedURL", {
+  const presignRes = await fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/generatepresignedurl", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ fileName, name }) // ✅ Include name here
@@ -151,11 +151,11 @@ async function analyzeResume() {
   }
 
   // ✅ Step 3: Call backend to analyze resume
-  const analyzeRes = await fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/resumeUpload/resume_analysis", {
+  const analyzeRes = await fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/resume-upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      bucket: "resumatch-resumes",
+      bucket: "resumatch-resumes-new",
       fileName: key  // ✅ Full path with name folder
     })
   });
@@ -166,5 +166,5 @@ async function analyzeResume() {
   localStorage.setItem("resumeReport", JSON.stringify(data));
 
   // ✅ Step 5: Redirect to report page
-  window.location.href = "/ResuMatch_final/resume-analysis/ra.html";
+  window.location.href = "resume-analysis/ra.html";
 }
