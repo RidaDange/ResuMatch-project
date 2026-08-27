@@ -118,53 +118,186 @@ document.getElementById('profileForm')?.addEventListener('submit', function (e) 
 });
 
 async function analyzeResume() {
-  const file = document.getElementById("resumeInput").files[0];
-  const fileName = file.name;
 
-  // 🔑 Step 0: Get user name (from localStorage or form)
-  const name = localStorage.getItem("userName"); // or replace with actual logic
-  if (!name) {
-    alert("User name not found. Please log in.");
-    return;
+  try {
+
+    // Get selected file
+    const fileInput = document.getElementById("resumeInput");
+    const file = fileInput.files[0];
+
+    // Check if a file was selected
+    if (!file) {
+      alert("❌ Please select a resume first.");
+      return;
+    }
+
+    const fileName = file.name;
+
+    console.log("📄 Selected file:", fileName);
+
+    // Get logged-in user name
+    const name = localStorage.getItem("userName");
+
+    if (!name) {
+      alert("❌ User name not found. Please log in.");
+      return;
+    }
+
+    console.log("👤 Username:", name);
+
+
+    // =====================================
+    // STEP 1: Generate Presigned URL
+    // =====================================
+
+    const presignRes = await fetch(
+      "https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/generatepresignedurl",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          fileName,
+          name
+        })
+      }
+    );
+
+
+    const presignData = await presignRes.json();
+
+    console.log("📦 Presigned URL response:", presignData);
+
+
+    if (!presignRes.ok) {
+      throw new Error(
+        presignData.error ||
+        "Failed to generate upload URL"
+      );
+    }
+
+
+    const uploadUrl = presignData.uploadUrl;
+    const key = presignData.key;
+
+
+    if (!uploadUrl || !key) {
+      throw new Error(
+        "Upload URL or S3 key missing from API response"
+      );
+    }
+
+
+    console.log("🔑 S3 Key:", key);
+
+
+    // =====================================
+    // STEP 2: Upload Resume to S3
+    // =====================================
+
+    console.log("⬆️ Uploading resume...");
+
+
+    const uploadRes = await fetch(uploadUrl, {
+      method: "PUT",
+      body: file
+    });
+
+
+    if (!uploadRes.ok) {
+      throw new Error("Resume upload failed");
+    }
+
+
+    console.log("✅ Resume uploaded successfully");
+
+
+    // =====================================
+    // STEP 3: Analyze Resume
+    // =====================================
+
+    console.log("🔍 Starting resume analysis...");
+
+
+    const analyzeRes = await fetch(
+      "https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/resume-upload",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          bucket: "resumatch-resumes-new",
+          fileName: key
+        })
+      }
+    );
+
+
+    const data = await analyzeRes.json();
+
+
+    console.log("📊 Analysis response:", data);
+
+
+    if (!analyzeRes.ok) {
+      throw new Error(
+        data.error ||
+        "Resume analysis failed"
+      );
+    }
+
+
+    // =====================================
+    // STEP 4: Save Report
+    // =====================================
+
+    localStorage.setItem(
+      "resumeReport",
+      JSON.stringify(data)
+    );
+
+
+    // Also save the file information
+    localStorage.setItem(
+      "currentResumeFile",
+      fileName
+    );
+
+
+    localStorage.setItem(
+      "currentResumeKey",
+      key
+    );
+
+
+    console.log("💾 Resume report saved");
+
+
+    // =====================================
+    // STEP 5: Redirect to Analysis Page
+    // =====================================
+
+    console.log("➡️ Redirecting to analysis page...");
+
+
+    window.location.href =
+      "../resume-analysis/ra.html";
+
+
+  } catch (error) {
+
+    console.error(
+      "❌ Resume analysis error:",
+      error
+    );
+
+    alert(
+      "❌ Something went wrong: " +
+      error.message
+    );
+
   }
-  console.log("Username:", name);
 
-  // ✅ Step 1: Generate presigned URL from backend
-  const presignRes = await fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/generatepresignedurl", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName, name }) // ✅ Include name here
-  });
-
-  const { uploadUrl, key } = await presignRes.json(); // ✅ get key
-  console.log("Presigned URL:", uploadUrl);
-
-  // ✅ Step 2: Upload resume to S3 using presigned URL
-  const uploadRes = await fetch(uploadUrl, {
-    method: "PUT",
-    body: file
-  });
-
-  if (!uploadRes.ok) {
-    alert("❌ Upload failed");
-    return;
-  }
-
-  // ✅ Step 3: Call backend to analyze resume
-  const analyzeRes = await fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/resume-analysis/resume-upload", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      bucket: "resumatch-resumes-new",
-      fileName: key  // ✅ Full path with name folder
-    })
-  });
-
-  const data = await analyzeRes.json();
-
-  // ✅ Step 4: Save response to localStorage
-  localStorage.setItem("resumeReport", JSON.stringify(data));
-
-  // ✅ Step 5: Redirect to report page
-  window.location.href = "resume-analysis/ra.html";
 }

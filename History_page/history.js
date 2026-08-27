@@ -108,13 +108,13 @@ async function fetchResumes() {
     }
 
     try {
-        const res = await fetch(`https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/getresume/getResume?email=${email}`);
+        const res = await fetch(`https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/getResume/resumes?email=${email}`);
         const files = await res.json();
 
         const enriched = await Promise.all(
             files.map(async f => {
                 const reportKey = `resumes-reports/${encodeURIComponent(f.filename)}.json`;
-                const reportURL = `https://resumatch-resumes.s3.ap-south-1.amazonaws.com/${reportKey}`;
+                const reportURL = `https://resumatch-resumes-new.s3.ap-south-1.amazonaws.com/${reportKey}`;
 
                 let score = "N/A";
                 try {
@@ -164,7 +164,7 @@ function renderHistory(data) {
 function deleteResume(filename) {
     if (!confirm("Are you sure you want to delete this resume?")) return;
 
-    fetch("https://97sowpn5e3.execute-api.ap-south-1.amazonaws.com/getresume/getResume", {
+    fetch("https://iq7915yme3.execute-api.ap-south-1.amazonaws.com/getResume/resumes", {
         method: "DELETE",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ filename, email })
