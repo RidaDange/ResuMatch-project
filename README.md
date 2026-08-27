@@ -23,7 +23,55 @@ ResuMatch is a cloud-based resume screening application designed to help job see
 
 ## 🏗️ Architecture
 
-![ResuMatch Architecture Diagram](./ResuMatch%20architecture.jpg.jpeg)
+
+```text
+User
+  │
+  ▼
+Amazon CloudFront (CDN)
+  │
+  ▼
+Amazon S3
+Frontend Hosting
+  │
+  ▼
+ResuMatch Frontend
+  │
+  ├──────────────► AWS Cognito
+  │                User Authentication
+  │
+  ▼
+Amazon API Gateway
+  │
+  ▼
+AWS Lambda
+Backend Logic
+  │
+  ├──────────────► Amazon DynamoDB
+  │                User Data
+  │
+  ▼
+Amazon S3
+Resume Storage
+  │
+  ▼
+S3 Event Trigger
+  │
+  ▼
+AWS Lambda
+Resume Analysis
+  │
+  ▼
+Amazon Textract
+Extract Resume Text
+  │
+  ▼
+Amazon Comprehend
+Analyze Resume Content
+  │
+  ▼
+Resume Analysis / ATS Results
+```
 
 ---
 
